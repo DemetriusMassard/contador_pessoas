@@ -28,6 +28,9 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   int pessoas = 0;
 
+  bool get isFull => pessoas == 20;
+  bool get isEmpty => pessoas == 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,20 +47,22 @@ class _HomepageState extends State<Homepage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                "Pode Entrar!",
+              Text(
+                isFull ? "Lotado" : "Pode Entrar!",
                 style: TextStyle(
                   fontSize: 42,
-                  color: Colors.white,
+                  fontWeight: isFull ? FontWeight.w800 : FontWeight.normal,
+                  color: isFull ? Colors.red : Colors.white,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(32),
                 child: Text(
                   '$pessoas',
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: isFull ? Colors.red : Colors.white,
                     fontSize: 62,
+                    fontWeight: isFull ? FontWeight.w600 : FontWeight.normal,
                   ),
                 ),
               ),
@@ -65,9 +70,11 @@ class _HomepageState extends State<Homepage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
-                    onPressed: decrement,
+                    onPressed: isEmpty ? null : decrement,
                     style: TextButton.styleFrom(
-                      backgroundColor: Colors.white,
+                      backgroundColor: isEmpty
+                          ? Colors.white.withOpacity(0.2)
+                          : Colors.white,
                       fixedSize: const Size(120, 120),
                       overlayColor: Colors.red,
                       shape: const RoundedRectangleBorder(
@@ -88,9 +95,10 @@ class _HomepageState extends State<Homepage> {
                     width: 48,
                   ),
                   TextButton(
-                    onPressed: increment,
+                    onPressed: isFull ? null : increment,
                     style: TextButton.styleFrom(
-                      backgroundColor: Colors.white,
+                      backgroundColor:
+                          isFull ? Colors.white.withOpacity(0.2) : Colors.white,
                       fixedSize: const Size(120, 120),
                       overlayColor: const Color(0xFF0000AA),
                       shape: const RoundedRectangleBorder(
@@ -119,14 +127,14 @@ class _HomepageState extends State<Homepage> {
   void increment() {
     setState(
       () {
-        pessoas++;
+        isFull ? null : pessoas++;
       },
     );
   }
 
   void decrement() {
     setState(() {
-      pessoas--;
+      isEmpty ? null : pessoas--;
     });
   }
 }
